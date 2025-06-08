@@ -1,7 +1,6 @@
 [Unit]
 Description=Network Namespace for Transmission
 PartOf=torrent.target
-#Before=wg-transmission.service
 
 [Service]
 Type=oneshot

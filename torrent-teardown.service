@@ -1,0 +1,11 @@
+[Unit]
+Description=torrent network namespace teardown
+
+[Service]
+Type=oneshot
+RemainAfterExit=no
+IgnoreExitFailure=true
+ExecStart=/usr/bin/ip --netns torrentns link del dev wg-protonvpn-se
+ExecStart=/usr/bin/ip --netns torrentns link del dev host0
+ExecStart=/usr/bin/ip link del dev torrent0
+ExecStart=/usr/bin/ip netns del torrentns
