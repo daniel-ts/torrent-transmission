@@ -1,0 +1,20 @@
+[Unit]
+Description=WireGuard VPN in Torrent Namespace
+PartOf=torrent.target
+After=torrent-dnsmasq.service
+Requires=torrent-namespace.service torrent-dnsmasq.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/ip link add wg-protonvpn-se type wireguard
+ExecStart=/usr/bin/ip link set wg-protonvpn-se netns torrentns
+ExecStart=/usr/bin/ip --netns torrentns add add 10.2.0.2/32 dev wg-protonvpn-se
+ExecStart=/usr/bin/ip netns exec torrentns wg setconf wg-protonvpn-se /etc/wireguard/wg-protonvpn-se.conf
+ExecStart=/usr/bin/ip --netns torrentns link set wg-protonvpn-se up
+ExecStart=/usr/bin/ip --netns torrentns route add default dev wg-protonvpn-se
+
+ExecStop=/usr/bin/ip --netns torrentns link delete wg-protonvpn-se
+
+[Install]
+WantedBy=torrent.target
