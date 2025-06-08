@@ -1,0 +1,22 @@
+[Unit]
+Description=Network Namespace for Transmission
+PartOf=torrent.target
+Before=wg-transmission.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/ip netns add torrentns
+ExecStart=/usr/bin/ip link add name torrent0 type veth peer name torrent1
+ExecStart=/usr/bin/ip link set dev torrent1 netns torrentns
+ExecStart=/usr/bin/ip addr add 10.7.0.1/24 dev torrent0
+ExecStart=/usr/bin/ip link set dev torrent0 up
+ExecStart=/usr/bin/ip --netns torrentns link set lo up
+ExecStart=/usr/bin/ip --netns torrentns addr add 10.7.0.2/24 dev torrent1
+ExecStart=/usr/bin/ip --netns torrentns link set dev torrent1 up
+
+ExecStop=-/usr/bin/ip link del dev torrent0
+ExecStop=-/usr/bin/ip netns del torrentns
+
+[Install]
+WantedBy=torrent.target
