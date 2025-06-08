@@ -18,3 +18,12 @@ service files.
 - Put the WireGuard VPN config files into =/etc/wireguard=
 - Install =transmission-daemon= and =dnsmasq=
 - Configure =transmission-daemon= inside =/etc/transmission/daemon=
+
+* Why not put all of that into a container
+I think network namespace isolation is enough. =podman= actually drives me nuts
+I need to set up WireGuard inside it.
+
+* TODO
+- Better README
+- Factor out parameters into a seperate file (somehow)
+- Maybe make this into an Ansible playbook
