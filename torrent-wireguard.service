@@ -3,6 +3,7 @@ Description=WireGuard VPN in Torrent Namespace
 PartOf=torrent.target
 After=torrent-dnsmasq.service
 Requires=torrent-namespace.service torrent-dnsmasq.service
+Wants=torrent-namespace.service torrent-dnsmasq.service
 
 [Service]
 Type=oneshot
