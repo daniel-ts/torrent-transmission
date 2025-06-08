@@ -1,0 +1,14 @@
+[Unit]
+Description=DNS inside Network Namespace for Torrent
+PartOf=torrent.target
+Requires=torrent-namespace.service
+After=torrent-namespace.service
+
+[Service]
+Type=forking
+PIDFile=%t/torrent-dnsmasq/dnsmasq.pid
+RuntimeDirectory=torrent-dnsmasq
+ExecStart=/usr/bin/ip netns exec torrentns dnsmasq --bind-interfaces --interface=lo --listen-address=127.0.0.1 --server=10.2.0.1 --port=53 --pid-file=%t/torrent-dnsmasq/dnsmasq.pid
+
+[Install]
+WantedBy=torrent.target
