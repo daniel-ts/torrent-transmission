@@ -1,0 +1,20 @@
+#+TITLE: transmission+vpn inside own network namespace
+
+Run a transmission-daemon via systemd in its own network namespace where a
+WireGuard VPN interace is the only way to reach the outside world to ensure /a
+certain type of anonymity/ ;)
+
+This is just my setup with all the parameters hard coded inside the systemd
+service files.
+
+* Dependencies
+- =dnsmasq=
+- =systemd=
+- =transmission-daemon=
+
+* Setup
+- Clone the repo
+- Adjust the parameters like IP veth pair IP addresses inside the service files
+- Put the WireGuard VPN config files into =/etc/wireguard=
+- Install =transmission-daemon= and =dnsmasq=
+- Configure =transmission-daemon= inside =/etc/transmission/daemon=
