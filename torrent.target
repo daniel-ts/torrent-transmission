@@ -1,0 +1,6 @@
+[Unit]
+Description=Torrent services with isolated network namespace
+Wants=torrent-namespace.service torrent-dnsmasq.service torrent-wireguard.service torrent-transmission.service
+
+[Install]
+WantedBy=multi-user.target

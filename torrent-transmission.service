@@ -10,7 +10,7 @@ Type=simple
 User=transmission
 Group=transmission
 NetworkNamespacePath=/var/run/netns/torrentns
-ExecStart=/usr/bin/transmission-daemon --foreground ---config-dir /etc/transmission/daemon --allowed 172.16.16.* -C --encryption-preferred --rpc-bind-address 172.16.16.2 --port 9091 --no-auth --log-info
+ExecStart=/usr/bin/transmission-daemon --foreground --config-dir /etc/transmission/daemon --allowed 172.16.16.* -C --encryption-preferred --rpc-bind-address 172.16.16.2 --port 9091 --no-auth --log-info --no-incomplete-dir
 Restart=on-failure
 
 [Install]

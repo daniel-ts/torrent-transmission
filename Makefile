@@ -2,7 +2,8 @@
 SYSTEMD_DIR = /etc/systemd/system
 SERVICE_FILES = $(wildcard *.service)
 TIMER_FILES = $(wildcard *.timer)
-ALL_FILES = $(SERVICE_FILES) $(TIMER_FILES)
+TARGET_FILES = $(wildcard *.target)
+ALL_FILES = $(SERVICE_FILES) $(TIMER_FILES) $(TARGET_FILES)
 
 # Default target
 .PHONY: all install uninstall clean reload
