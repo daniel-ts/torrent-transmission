@@ -9,6 +9,7 @@ service files.
 
 * Dependencies
 - =dnsmasq=
+- =iproute2= (=ip= utility)
 - =systemd=
 - =transmission-daemon=
 
@@ -21,7 +22,7 @@ service files.
 
 * Why not put all of that into a container
 I think network namespace isolation is enough. =podman= actually drives me nuts
-I need to set up WireGuard inside it.
+when I need to set up WireGuard inside it.
 
 * TODO
 - Better README
