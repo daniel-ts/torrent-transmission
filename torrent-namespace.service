@@ -5,18 +5,19 @@ PartOf=torrent.target
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/bin/ip netns add torrentns
-ExecStart=/usr/bin/ip link add name torrent0 type veth peer name host0
-ExecStart=/usr/bin/ip link set dev host0 netns torrentns
-ExecStart=/usr/bin/ip addr add 172.16.16.1/24 dev torrent0
-ExecStart=/usr/bin/ip link set dev torrent0 up
-ExecStart=/usr/bin/ip --netns torrentns link set lo up
-ExecStart=/usr/bin/ip --netns torrentns addr add 172.16.16.2/24 dev host0
-ExecStart=/usr/bin/ip --netns torrentns link set dev host0 up
+EnvironmentFile=/etc/systemd/system/torrent.env
+ExecStart=/usr/bin/ip netns add ${NET_NS_NAME}
+ExecStart=/usr/bin/ip link add name ${HOST_IFACE} type veth peer name ${NS_IFACE}
+ExecStart=/usr/bin/ip link set dev ${NS_IFACE} netns ${NET_NS_NAME}
+ExecStart=/usr/bin/ip addr add ${HOST_IP}/24 dev ${HOST_IFACE}
+ExecStart=/usr/bin/ip link set dev ${HOST_IFACE} up
+ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} link set lo up
+ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} addr add ${NS_IP}/24 dev ${NS_IFACE}
+ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} link set dev ${NS_IFACE} up
 
-ExecStop=/usr/bin/ip --netns torrentns link del dev host0
-ExecStop=/usr/bin/ip link del dev torrent0
-ExecStop=/usr/bin/ip netns del torrentns
+ExecStop=/usr/bin/ip --netns ${NET_NS_NAME} link del dev ${NS_IFACE}
+ExecStop=/usr/bin/ip link del dev ${HOST_IFACE}
+ExecStop=/usr/bin/ip netns del ${NET_NS_NAME}
 
 [Install]
 WantedBy=torrent.target

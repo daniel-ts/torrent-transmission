@@ -8,14 +8,15 @@ Wants=torrent-namespace.service torrent-dnsmasq.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/bin/ip link add wg-protonvpn-se type wireguard
-ExecStart=/usr/bin/ip link set wg-protonvpn-se netns torrentns
-ExecStart=/usr/bin/ip --netns torrentns add add 10.2.0.2/32 dev wg-protonvpn-se
-ExecStart=/usr/bin/ip netns exec torrentns wg setconf wg-protonvpn-se /etc/wireguard/wg-protonvpn-se.conf
-ExecStart=/usr/bin/ip --netns torrentns link set wg-protonvpn-se up
-ExecStart=/usr/bin/ip --netns torrentns route add default dev wg-protonvpn-se
+EnvironmentFile=/etc/systemd/system/torrent.env
+ExecStart=/usr/bin/ip link add ${WG_IFACE} type wireguard
+ExecStart=/usr/bin/ip link set ${WG_IFACE} netns ${NET_NS_NAME}
+ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} add add ${VPN_LOCAL_IP}/32 dev ${WG_IFACE}
+ExecStart=/usr/bin/ip netns exec ${NET_NS_NAME} wg setconf ${WG_IFACE} ${WG_CONF_FILE}
+ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} link set ${WG_IFACE} up
+ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} route add default dev ${WG_IFACE}
 
-ExecStop=/usr/bin/ip --netns torrentns link delete wg-protonvpn-se
+ExecStop=/usr/bin/ip --netns ${NET_NS_NAME} link delete ${WG_IFACE}
 
 [Install]
 WantedBy=torrent.target
