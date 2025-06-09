@@ -10,13 +10,14 @@ Type=oneshot
 RemainAfterExit=yes
 EnvironmentFile=/etc/systemd/system/torrent.env
 ExecStart=/usr/bin/ip link add ${WG_IFACE} type wireguard
-ExecStart=/usr/bin/ip link set ${WG_IFACE} netns ${NET_NS_NAME}
-ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} add add ${VPN_LOCAL_IP}/32 dev ${WG_IFACE}
-ExecStart=/usr/bin/ip netns exec ${NET_NS_NAME} wg setconf ${WG_IFACE} ${WG_CONF_FILE}
-ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} link set ${WG_IFACE} up
-ExecStart=/usr/bin/ip --netns ${NET_NS_NAME} route add default dev ${WG_IFACE}
+ExecStart=/usr/bin/ip link set ${WG_IFACE} netns torrentns
+ExecStart=/usr/bin/ip --netns torrentns add add ${VPN_LOCAL_IP}/32 dev ${WG_IFACE}
+ExecStart=/usr/bin/ip netns exec torrentns wg setconf ${WG_IFACE} ${WG_CONF_FILE}
+ExecStart=/usr/bin/ip --netns torrentns link set ${WG_IFACE} up
+ExecStart=/usr/bin/ip --netns torrentns route add default dev ${WG_IFACE}
 
-ExecStop=/usr/bin/ip --netns ${NET_NS_NAME} link delete ${WG_IFACE}
+ExecStop=-/usr/bin/ip --netns torrentns link delete ${WG_IFACE}
+ExecStop=-/usr/bin/ip link delete ${WG_IFACE}
 
 [Install]
 WantedBy=torrent.target

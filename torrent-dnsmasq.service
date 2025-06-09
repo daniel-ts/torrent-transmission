@@ -7,8 +7,10 @@ After=torrent-namespace.service
 
 [Service]
 Type=simple
+NoNewPrivileges=yes
+PrivateTmp=yes
 EnvironmentFile=/etc/systemd/system/torrent.env
-NetworkNamespacePath=/var/run/netns/${NET_NS_NAME}
+NetworkNamespacePath=/var/run/netns/torrentns
 ExecStart=/usr/bin/dnsmasq --keep-in-foreground --bind-interfaces --interface=lo --listen-address=127.0.0.1 --server=${VPN_DNS_IP} --port=53
 
 [Install]
